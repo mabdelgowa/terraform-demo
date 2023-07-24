@@ -10,7 +10,7 @@ variable "cidr_blocks" {
   }))
 }
 
-variable "my_ip" {}
+variable "my_ip" {} // my public IP address for ssh connsction
 
 variable "instance_type" {}
 
@@ -59,18 +59,21 @@ resource "aws_security_group" "nginx-sg" {
   name = "nginx-sg"
   vpc_id = aws_vpc.nginx-vpc.id
   ingress {
+    //to allow ssh connection on EC2 instance
     from_port = 22
     protocol  = "tcp"
     to_port   = 22
     cidr_blocks = var.my_ip
   }
   ingress {
+    //to be able to connect to the ngnix container
     from_port = 8080
     protocol  = "tcp"
     to_port   = 8080
     cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
+    //to allow the instance to connect to yum repo to to install docker
     from_port = 443
     protocol  = "tcp"
     to_port   = 443
@@ -87,7 +90,7 @@ resource "aws_instance" "nginx-server" {
   subnet_id = aws_subnet.nginx-subnet-1.id
   vpc_security_group_ids = [aws_security_group.nginx-sg.id]
   associate_public_ip_address = true
-  key_name = "new1"
+  key_name = "new1" // this key was generated before and I generated a .ppk to ssh from putty
   user_data = file("entry-script.sh")
   tags = {
     Name = "${var.env_prefix}-server"
