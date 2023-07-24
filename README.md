@@ -1,6 +1,8 @@
 # terraform-demo overview
 
-note: the (terraform.tfvars) file is customized with particular values for every user 
+### Note: the (terraform.tfvars) file is customized with particular values for every user 
+### Note: credentials of the AWS user are added as environment variables before starting 
+
 
 ## Provision AWS infrastructure
 ### 1- create a custom VPC
